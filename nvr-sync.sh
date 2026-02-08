@@ -45,6 +45,27 @@ cleanup_hdd() {
     log "HDD cleanup complete"
 }
 
+repair_symlinks() {
+    log "Starting symlink repair"
+
+    find "$HDD_RECORDINGS" -type f -print0 | while IFS= read -r -d '' hdd_file; do
+        rel_path="${hdd_file#$HDD_RECORDINGS/}"
+        ssd_path="$SSD_RECORDINGS/$rel_path"
+
+        # Skip if a valid symlink already exists
+        [ -L "$ssd_path" ] && [ -e "$ssd_path" ] && continue
+
+        # Remove broken symlink if present
+        [ -L "$ssd_path" ] && rm "$ssd_path"
+
+        mkdir -p "$(dirname "$ssd_path")"
+        ln -s "$hdd_file" "$ssd_path"
+        log "Repaired: $rel_path"
+    done
+
+    log "Symlink repair complete"
+}
+
 revert() {
     log "Starting revert"
 
@@ -72,11 +93,14 @@ case "${1:-sync}" in
         sync_to_hdd
         cleanup_hdd
         ;;
+    repair)
+        repair_symlinks
+        ;;
     revert)
         revert
         ;;
     *)
-        echo "Usage: $0 {sync|revert}"
+        echo "Usage: $0 {sync|repair|revert}"
         exit 1
         ;;
 esac

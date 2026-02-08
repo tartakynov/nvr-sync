@@ -55,6 +55,13 @@ services:
 
 Replace `/path/to/ssd/frigate` and `/path/to/hdd/frigate` with your actual host paths. The container-side paths (`/media/frigate` and `/media/frigate-hdd`) must stay the same in both containers.
 
+## Repairing symlinks
+
+If symlinks on the SSD become broken or go missing (e.g. after a filesystem issue), recreate them from the HDD:
+```bash
+docker exec -it nvr-sync nvr-sync.sh repair
+```
+
 ## Reverting
 
 To revert to the original state — moving files back to SSD and cleaning up the HDD:
