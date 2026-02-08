@@ -1,6 +1,6 @@
 # nvr-sync
 
-A Docker container that runs a nightly cron job to move Frigate NVR recordings from SSD to HDD, replacing them with symlinks so Frigate can still find its files.
+A Docker container that runs a cron job to move Frigate NVR recordings from SSD to HDD, replacing them with symlinks so Frigate can still find its files.
 
 Both this container and Frigate share the same volume mounts:
 - `/media/frigate` — SSD
@@ -12,7 +12,7 @@ Frigate's constant read/write activity would prevent the HDDs from ever spinning
 
 By letting Frigate write to SSD — where all Docker data also lives — the HDDs are only accessed when users actively interact with the data (viewing content, editing photos/videos). This keeps the HDDs in a low-power idle state most of the time.
 
-The trade-off is that SSD capacity would quickly fill up with Frigate recordings. This script solves that by offloading recordings from SSD to HDD nightly, waking the drives only briefly for the sync.
+The trade-off is that SSD capacity would quickly fill up with Frigate recordings. This script solves that by offloading recordings from SSD to HDD, waking the drives only briefly for the sync.
 
 ## How it works
 
