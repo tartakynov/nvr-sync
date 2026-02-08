@@ -47,7 +47,9 @@ The script syncs recordings between SSD and HDD without storing more data than F
 
 ## Docker Compose
 
-> **Important:** Both containers must mount the SSD and HDD to the **same paths** inside the container. The sync script creates absolute symlinks from SSD to HDD — if mount paths differ between containers, Frigate won't be able to follow the symlinks.
+> [!IMPORTANT]  
+> Both containers must mount the SSD and HDD to the **same paths** inside the container. The sync script creates absolute symlinks from SSD to HDD — if mount paths differ between containers, Frigate won't be able to follow the symlinks.
+
 ```yaml
 services:
   frigate:
