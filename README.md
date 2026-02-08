@@ -40,6 +40,8 @@ services:
     container_name: nvr-sync
     build: .
     restart: unless-stopped
+    environment:
+      - CRON_SCHEDULE=0 2 * * *  # default: nightly at 2 AM
     volumes:
       - /path/to/ssd/frigate:/media/frigate
       - /path/to/hdd/frigate:/media/frigate-hdd
