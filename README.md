@@ -14,25 +14,6 @@ By letting Frigate write to SSD — where all Docker data also lives — HDDs ar
 
 The trade-off is that SSD capacity fills up quickly with Frigate recordings. This script solves that by offloading recordings from SSD to HDD, waking the drives only briefly for the sync.
 
-### SSD wear
-
-**Daily writes:** ~10 GB (reasonable estimate for motion-only recording from a few cameras) = **~3.65 TB/year** logical writes
-
-**Actual NAND writes:** SSDs experience write amplification (WA) — the controller must erase and rewrite blocks larger than your data. This typically multiplies writes by 1.5x-3x. At a conservative 2x WA, 10 GB/day becomes **~7.3 TB/year** of actual wear.
-
-#### Endurance estimates
-
-| SSD capacity | Typical TBW | Years to reach TBW at 10 GB/day (2x WA) |
-|:-------------|:------------|:----------------------------------------|
-| 250 GB       | 150 TBW     | ~20 years                               |
-| 500 GB       | 300 TBW     | ~41 years                               |
-| 1 TB         | 600 TBW     | ~82 years                               |
-| 2 TB         | 1,200 TBW   | ~164 years                              |
-
-**Important:** Write amplification increases as drives fill up. A 250 GB drive running near capacity will wear faster than these estimates suggest.
-
-For larger drives (1+ TB), SSD wear is negligible — the drive will be obsolete before it wears out.
-
 ## How it works
 
 The script syncs recordings between SSD and HDD without storing more data than Frigate intends to keep. Retention is controlled entirely through Frigate's config — no duplicate cleanup logic needed.
@@ -80,3 +61,22 @@ To revert to the original state — moving files back to SSD and cleaning up the
 ```bash
 docker exec -it nvr-sync nvr-sync.sh revert
 ```
+
+## SSD wear
+
+**Daily writes:** ~10 GB (reasonable estimate for motion-only recording from a few cameras) = **~3.65 TB/year** logical writes
+
+**Actual NAND writes:** SSDs experience write amplification (WA) — the controller must erase and rewrite blocks larger than your data. This typically multiplies writes by 1.5x-3x. At a conservative 2x WA, 10 GB/day becomes **~7.3 TB/year** of actual wear.
+
+### Endurance estimates
+
+| SSD capacity | Typical TBW | Years to reach TBW at 10 GB/day (2x WA) |
+|:-------------|:------------|:----------------------------------------|
+| 250 GB       | 150 TBW     | ~20 years                               |
+| 500 GB       | 300 TBW     | ~41 years                               |
+| 1 TB         | 600 TBW     | ~82 years                               |
+| 2 TB         | 1,200 TBW   | ~164 years                              |
+
+**Important:** Write amplification increases as drives fill up. A 250 GB drive running near capacity will wear faster than these estimates suggest.
+
+For larger drives (1+ TB), SSD wear is negligible — the drive will be obsolete before it wears out.
