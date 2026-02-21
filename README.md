@@ -1,4 +1,4 @@
-# nvr-sync
+# frigate-ssd-to-hdd
 
 A Docker container that runs a cron job to move Frigate NVR recordings from SSD to HDD, replacing them with symlinks so Frigate can still find its files.
 
@@ -42,8 +42,8 @@ services:
       - /path/to/hdd/frigate:/media/frigate-hdd
       # ... other volumes as needed
 
-  nvr-sync:
-    container_name: nvr-sync
+  frigate-ssd-to-hdd:
+    container_name: frigate-ssd-to-hdd
     build: .
     restart: unless-stopped
     environment:
@@ -61,14 +61,14 @@ Replace `/path/to/ssd/frigate` and `/path/to/hdd/frigate` with your actual host 
 
 If symlinks on the SSD become broken or go missing (e.g. after a filesystem issue), recreate them from the HDD:
 ```bash
-docker exec -it nvr-sync nvr-sync.sh repair
+docker exec -it frigate-ssd-to-hdd ssd-to-hdd.sh repair
 ```
 
 ## Reverting
 
 To revert to the original state — moving files back to SSD and cleaning up the HDD:
 ```bash
-docker exec -it nvr-sync nvr-sync.sh revert
+docker exec -it nfrigate-ssd-to-hdd ssd-to-hdd.sh revert
 ```
 
 ## SSD wear
